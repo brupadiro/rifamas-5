@@ -2,6 +2,7 @@ import '/ff/ff_icon_button.dart';
 import '/ff/ff_theme.dart';
 import '/ff/ff_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -110,7 +111,9 @@ class _SecondaaryHeaderComponentWidgetState
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 10.0, 0.0),
                   child: Text(
-                    '${FFAppState().currentBalance}',
+                    '${(String balance) {
+                      return balance.replaceAll(".", ",");
+                    }(FFAppState().currentBalance)}',
                     style: FFTheme.of(context).titleLarge.override(
                           fontFamily: 'Readex Pro',
                           color: FFTheme.of(context).primary,

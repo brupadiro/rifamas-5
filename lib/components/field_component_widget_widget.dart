@@ -1,6 +1,7 @@
 import '/ff/ff_theme.dart';
 import '/ff/ff_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'field_component_widget_model.dart';
@@ -35,6 +36,7 @@ class _FieldComponentWidgetWidgetState
     _model = createModel(context, () => FieldComponentWidgetModel());
 
     _model.textController ??= TextEditingController();
+    _model.textFieldFocusNode ??= FocusNode();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -69,6 +71,7 @@ class _FieldComponentWidgetWidgetState
             padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 8.0, 0.0),
             child: TextFormField(
               controller: _model.textController,
+              focusNode: _model.textFieldFocusNode,
               autofocus: true,
               obscureText: false,
               decoration: InputDecoration(

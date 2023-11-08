@@ -2,6 +2,7 @@ import '/ff/ff_theme.dart';
 import '/ff/ff_util.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'cuota_component_widget_model.dart';
@@ -31,7 +32,9 @@ class _CuotaComponentWidgetWidgetState
     _model = createModel(context, () => CuotaComponentWidgetModel());
 
     _model.textController1 ??= TextEditingController();
+    _model.textFieldFocusNode1 ??= FocusNode();
     _model.textController2 ??= TextEditingController();
+    _model.textFieldFocusNode2 ??= FocusNode();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -48,7 +51,7 @@ class _CuotaComponentWidgetWidgetState
 
     return Container(
       width: MediaQuery.sizeOf(context).width * 1.0,
-      height: 330.0,
+      height: 400.0,
       decoration: BoxDecoration(
         color: FFTheme.of(context).secondaryBackground,
       ),
@@ -100,6 +103,7 @@ class _CuotaComponentWidgetWidgetState
                 ),
                 TextFormField(
                   controller: _model.textController1,
+                  focusNode: _model.textFieldFocusNode1,
                   onChanged: (_) => EasyDebounce.debounce(
                     '_model.textController1',
                     Duration(milliseconds: 2000),
@@ -176,6 +180,7 @@ class _CuotaComponentWidgetWidgetState
                 ),
                 TextFormField(
                   controller: _model.textController2,
+                  focusNode: _model.textFieldFocusNode2,
                   onChanged: (_) => EasyDebounce.debounce(
                     '_model.textController2',
                     Duration(milliseconds: 2000),

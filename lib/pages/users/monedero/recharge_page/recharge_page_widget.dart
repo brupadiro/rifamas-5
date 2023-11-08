@@ -1,13 +1,11 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
-import '/backend/backend.dart';
 import '/components/secondaary_header_component_widget.dart';
 import '/ff/ff_theme.dart';
 import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'recharge_page_model.dart';
@@ -30,8 +28,8 @@ class _RechargePageWidgetState extends State<RechargePageWidget> {
     super.initState();
     _model = createModel(context, () => RechargePageModel());
 
-    _model.textController ??=
-        TextEditingController(text: _model.balance?.toString());
+    _model.textController ??= TextEditingController();
+    _model.textFieldFocusNode ??= FocusNode();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -44,6 +42,15 @@ class _RechargePageWidgetState extends State<RechargePageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -127,8 +134,25 @@ class _RechargePageWidgetState extends State<RechargePageWidget> {
                                           ),
                                     ),
                                   ),
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 10.0),
+                                    child: Text(
+                                      valueOrDefault<String>(
+                                        _model.balance?.toString(),
+                                        '0',
+                                      ),
+                                      style: FFTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w900,
+                                          ),
+                                    ),
+                                  ),
                                   TextFormField(
                                     controller: _model.textController,
+                                    focusNode: _model.textFieldFocusNode,
                                     onChanged: (_) => EasyDebounce.debounce(
                                       '_model.textController',
                                       Duration(milliseconds: 2000),
@@ -185,6 +209,7 @@ class _RechargePageWidgetState extends State<RechargePageWidget> {
                                     ),
                                     style:
                                         FFTheme.of(context).bodyMedium,
+                                    keyboardType: TextInputType.number,
                                     validator: _model.textControllerValidator
                                         .asValidator(context),
                                   ),
@@ -193,66 +218,32 @@ class _RechargePageWidgetState extends State<RechargePageWidget> {
                                         0.0, 15.0, 0.0, 0.0),
                                     child: FFButtonWidget(
                                       onPressed: () async {
-                                        _model.apiResulty1l = await WalletGroup
-                                            .newTransactionCall
-                                            .call(
-                                          type: 'debit',
-                                          amount: _model.balance?.toString(),
-                                          idUser: getJsonField(
+                                        _model.apiResulty1l =
+                                            await AddToCartCall.call(
+                                          productId: 1808,
+                                          userId: getJsonField(
                                             FFAppState().jwtuser,
                                             r'''$.ID''',
                                           ),
+                                          price: int.tryParse(
+                                              _model.textController.text),
                                         );
                                         if ((_model.apiResulty1l?.succeeded ??
                                             true)) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'Balance actualizado con éxito',
-                                                style: TextStyle(
-                                                  color: FFTheme.of(
-                                                          context)
-                                                      .primaryText,
-                                                ),
+                                          context.pushNamed(
+                                            'webViewPage',
+                                            queryParameters: {
+                                              'route': serializeParam(
+                                                'wallet',
+                                                ParamType.String,
                                               ),
-                                              duration:
-                                                  Duration(milliseconds: 4000),
-                                              backgroundColor:
-                                                  FFTheme.of(context)
-                                                      .secondary,
-                                            ),
+                                            }.withoutNulls,
                                           );
-                                          _model.apiResult94g =
-                                              await WalletGroup.getBalanceCall
-                                                  .call(
-                                            idUser: getJsonField(
-                                              FFAppState().jwtuser,
-                                              r'''$.ID''',
-                                            ).toString(),
-                                          );
-                                          if ((_model.apiResult94g?.succeeded ??
-                                              true)) {
-                                            setState(() {
-                                              FFAppState().currentBalance =
-                                                  _model.textController.text;
-                                            });
 
-                                            await TransactionRecord.collection
-                                                .doc()
-                                                .set({
-                                              ...createTransactionRecordData(
-                                                type: 'Solicitud de recarga',
-                                                amount: _model.balance,
-                                              ),
-                                              ...mapToFirestore(
-                                                {
-                                                  'datetime': FieldValue
-                                                      .serverTimestamp(),
-                                                },
-                                              ),
-                                            });
-                                          }
+                                          setState(() {
+                                            FFAppState().currentBalance =
+                                                _model.textController.text;
+                                          });
                                         }
 
                                         setState(() {});

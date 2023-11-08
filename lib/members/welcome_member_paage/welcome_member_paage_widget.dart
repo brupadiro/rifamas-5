@@ -5,6 +5,7 @@ import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
 import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'welcome_member_paage_model.dart';
@@ -40,6 +41,15 @@ class _WelcomeMemberPaageWidgetState extends State<WelcomeMemberPaageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -53,7 +63,7 @@ class _WelcomeMemberPaageWidgetState extends State<WelcomeMemberPaageWidget> {
           alignment: AlignmentDirectional(0.0, 1.0),
           children: [
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 100.0),
+              padding: EdgeInsetsDirectional.fromSTEB(10.0, 80.0, 10.0, 100.0),
               child: Container(
                 width: MediaQuery.sizeOf(context).width * 1.0,
                 height: MediaQuery.sizeOf(context).height * 1.0,
@@ -62,11 +72,6 @@ class _WelcomeMemberPaageWidgetState extends State<WelcomeMemberPaageWidget> {
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    wrapWithModel(
-                      model: _model.secondaaryHeaderComponentModel,
-                      updateCallback: () => setState(() {}),
-                      child: SecondaaryHeaderComponentWidget(),
-                    ),
                     Expanded(
                       child: SingleChildScrollView(
                         child: Column(
@@ -255,39 +260,13 @@ class _WelcomeMemberPaageWidgetState extends State<WelcomeMemberPaageWidget> {
                                             ),
                                       ),
                                       Text(
-                                        '50 €',
+                                        '24,99 €',
                                         style: FFTheme.of(context)
                                             .displayMedium
                                             .override(
                                               fontFamily: 'Montserrat',
                                               fontSize: 34.0,
                                               fontWeight: FontWeight.w800,
-                                            ),
-                                      ),
-                                      Text(
-                                        'Sorteos/mes: 4',
-                                        style: FFTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'Montserrat',
-                                              color:
-                                                  FFTheme.of(context)
-                                                      .primary,
-                                              fontSize: 12.0,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                      Text(
-                                        'Papeletas/sorteo:3',
-                                        style: FFTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'Montserrat',
-                                              color:
-                                                  FFTheme.of(context)
-                                                      .primary,
-                                              fontSize: 12.0,
-                                              fontWeight: FontWeight.bold,
                                             ),
                                       ),
                                     ],
@@ -374,6 +353,14 @@ class _WelcomeMemberPaageWidgetState extends State<WelcomeMemberPaageWidget> {
                     ),
                   ),
                 ],
+              ),
+            ),
+            Align(
+              alignment: AlignmentDirectional(0.00, -1.00),
+              child: wrapWithModel(
+                model: _model.secondaaryHeaderComponentModel,
+                updateCallback: () => setState(() {}),
+                child: SecondaaryHeaderComponentWidget(),
               ),
             ),
           ],

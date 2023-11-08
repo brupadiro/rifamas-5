@@ -5,6 +5,7 @@ import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
 import '/ff/form_field_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'second_create_page_model.dart';
@@ -39,6 +40,15 @@ class _SecondCreatePageWidgetState extends State<SecondCreatePageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -52,7 +62,7 @@ class _SecondCreatePageWidgetState extends State<SecondCreatePageWidget> {
           alignment: AlignmentDirectional(0.0, 1.0),
           children: [
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
+              padding: EdgeInsetsDirectional.fromSTEB(10.0, 80.0, 10.0, 10.0),
               child: Container(
                 width: MediaQuery.sizeOf(context).width * 1.0,
                 height: MediaQuery.sizeOf(context).height * 1.0,
@@ -61,11 +71,6 @@ class _SecondCreatePageWidgetState extends State<SecondCreatePageWidget> {
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    wrapWithModel(
-                      model: _model.secondaaryHeaderComponentModel,
-                      updateCallback: () => setState(() {}),
-                      child: SecondaaryHeaderComponentWidget(),
-                    ),
                     Expanded(
                       child: Align(
                         alignment: AlignmentDirectional(0.00, 0.00),
@@ -317,6 +322,14 @@ class _SecondCreatePageWidgetState extends State<SecondCreatePageWidget> {
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
                 ),
+              ),
+            ),
+            Align(
+              alignment: AlignmentDirectional(0.00, -1.00),
+              child: wrapWithModel(
+                model: _model.secondaaryHeaderComponentModel,
+                updateCallback: () => setState(() {}),
+                child: SecondaaryHeaderComponentWidget(),
               ),
             ),
           ],

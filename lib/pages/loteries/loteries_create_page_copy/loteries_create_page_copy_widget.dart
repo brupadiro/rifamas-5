@@ -5,6 +5,7 @@ import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'loteries_create_page_copy_model.dart';
@@ -54,10 +55,13 @@ class _LoteriesCreatePageCopyWidgetState
     });
 
     _model.titleController ??= TextEditingController(text: _model.name);
+    _model.titleFocusNode ??= FocusNode();
     _model.descriptionController ??=
         TextEditingController(text: _model.description);
+    _model.descriptionFocusNode ??= FocusNode();
     _model.maxTicketsController ??=
         TextEditingController(text: _model.maxTickets?.toString());
+    _model.maxTicketsFocusNode ??= FocusNode();
     _model.lotteryPriceController ??= TextEditingController(
         text: valueOrDefault<String>(
       ((int price, int tickets) {
@@ -66,6 +70,7 @@ class _LoteriesCreatePageCopyWidgetState
           .toString(),
       '0',
     ));
+    _model.lotteryPriceFocusNode ??= FocusNode();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -78,6 +83,15 @@ class _LoteriesCreatePageCopyWidgetState
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return FutureBuilder<ApiCallResponse>(
@@ -168,6 +182,7 @@ class _LoteriesCreatePageCopyWidgetState
                                             0.0, 10.0, 0.0, 10.0),
                                         child: TextFormField(
                                           controller: _model.titleController,
+                                          focusNode: _model.titleFocusNode,
                                           onFieldSubmitted: (_) async {
                                             setState(() {
                                               _model.name =
@@ -249,6 +264,8 @@ class _LoteriesCreatePageCopyWidgetState
                                         child: TextFormField(
                                           controller:
                                               _model.descriptionController,
+                                          focusNode:
+                                              _model.descriptionFocusNode,
                                           onFieldSubmitted: (_) async {
                                             setState(() {
                                               _model.description = _model
@@ -433,6 +450,7 @@ class _LoteriesCreatePageCopyWidgetState
                                         child: TextFormField(
                                           controller:
                                               _model.maxTicketsController,
+                                          focusNode: _model.maxTicketsFocusNode,
                                           onFieldSubmitted: (_) async {
                                             setState(() {
                                               _model.maxTickets = int.tryParse(
@@ -515,6 +533,8 @@ class _LoteriesCreatePageCopyWidgetState
                                         child: TextFormField(
                                           controller:
                                               _model.lotteryPriceController,
+                                          focusNode:
+                                              _model.lotteryPriceFocusNode,
                                           onFieldSubmitted: (_) async {
                                             setState(() {
                                               _model.lotteryPrice =

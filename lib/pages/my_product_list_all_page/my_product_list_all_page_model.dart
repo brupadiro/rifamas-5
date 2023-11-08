@@ -5,8 +5,10 @@ import '/ff/ff_theme.dart';
 import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
 import '/pages/bottomnavigations/bottom_navigation_home_component/bottom_navigation_home_component_widget.dart';
+import '/ff/random_data_util.dart' as random_data;
 import 'my_product_list_all_page_widget.dart' show MyProductListAllPageWidget;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 

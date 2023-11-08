@@ -9,6 +9,7 @@ import '/ff/form_field_controller.dart';
 import 'withdraw_page_widget.dart' show WithdrawPageWidget;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +36,7 @@ class WithdrawPageModel extends FFModel<WithdrawPageWidget> {
       ? pageViewController!.page!.round()
       : 0;
   // State field(s) for TextField widget.
+  FocusNode? textFieldFocusNode;
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
   // State field(s) for DropDown widget.
@@ -51,6 +53,7 @@ class WithdrawPageModel extends FFModel<WithdrawPageWidget> {
   void dispose() {
     unfocusNode.dispose();
     secondaaryHeaderComponentModel.dispose();
+    textFieldFocusNode?.dispose();
     textController?.dispose();
   }
 

@@ -5,6 +5,7 @@ import '/ff/ff_widgets.dart';
 import 'login_page_widget.dart' show LoginPageWidget;
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +23,7 @@ class LoginPageModel extends FFModel<LoginPageWidget> {
   final unfocusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
   // State field(s) for email widget.
+  FocusNode? emailFocusNode;
   TextEditingController? emailController;
   String? Function(BuildContext, String?)? emailControllerValidator;
   String? _emailControllerValidator(BuildContext context, String? val) {
@@ -33,6 +35,7 @@ class LoginPageModel extends FFModel<LoginPageWidget> {
   }
 
   // State field(s) for password widget.
+  FocusNode? passwordFocusNode;
   TextEditingController? passwordController;
   late bool passwordVisibility;
   String? Function(BuildContext, String?)? passwordControllerValidator;
@@ -59,7 +62,10 @@ class LoginPageModel extends FFModel<LoginPageWidget> {
 
   void dispose() {
     unfocusNode.dispose();
+    emailFocusNode?.dispose();
     emailController?.dispose();
+
+    passwordFocusNode?.dispose();
     passwordController?.dispose();
   }
 

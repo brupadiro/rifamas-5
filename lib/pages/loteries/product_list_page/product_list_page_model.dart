@@ -8,6 +8,7 @@ import 'dart:async';
 import 'product_list_page_widget.dart' show ProductListPageWidget;
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ class ProductListPageModel extends FFModel<ProductListPageWidget> {
   // Model for secondaaryHeaderComponent component.
   late SecondaaryHeaderComponentModel secondaaryHeaderComponentModel;
   // State field(s) for TextField widget.
+  FocusNode? textFieldFocusNode;
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
   // State field(s) for ListView widget.
@@ -41,7 +43,9 @@ class ProductListPageModel extends FFModel<ProductListPageWidget> {
   void dispose() {
     unfocusNode.dispose();
     secondaaryHeaderComponentModel.dispose();
+    textFieldFocusNode?.dispose();
     textController?.dispose();
+
     listViewPagingController?.dispose();
     productCardWidgetModels.dispose();
   }

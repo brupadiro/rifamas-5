@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import '../../ff/ff_util.dart';
+import '/ff/ff_util.dart';
 import 'api_manager.dart';
 
 export 'api_manager.dart' show ApiCallResponse;
@@ -39,7 +39,7 @@ class CreateCall {
     String? nombreproducto = '',
     String? author = '',
     String? optionSorteos = '',
-  }) {
+  }) async {
     return ApiManager.instance.makeApiCall(
       callName: 'create',
       apiUrl: '${CreateMembresyGroup.baseUrl}membresia/v1/crear',
@@ -51,7 +51,7 @@ class CreateCall {
         'papeletas-variacion-1': papeletasvariacion1,
         'papeletas-variacion-2': papeletasvariacion2,
         'papeletas-variacion-3': papeletasvariacion3,
-        'descripcion': papeletasvariacion3,
+        'descripcion': descripcion,
         'nombre-producto': nombreproducto,
         'logo_url': logo,
         'variacion-1': variacion1,
@@ -75,13 +75,12 @@ class WalletGroup {
   static String baseUrl = 'https://staging.rifamas.es/wp-json/wc/v2/wallet';
   static Map<String, String> headers = {};
   static GetBalanceCall getBalanceCall = GetBalanceCall();
-  static NewTransactionCall newTransactionCall = NewTransactionCall();
 }
 
 class GetBalanceCall {
   Future<ApiCallResponse> call({
     String? idUser = '',
-  }) {
+  }) async {
     return ApiManager.instance.makeApiCall(
       callName: 'get balance',
       apiUrl: '${WalletGroup.baseUrl}/balance/${idUser}',
@@ -91,34 +90,6 @@ class GetBalanceCall {
         'consumer_key': "ck_aa336b291d7f28b57c830ae5472a06d4d8e6a1ee",
         'consumer_secret': "cs_728cb39cc32c4d5d26c01977b84cba580bca36c9",
       },
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-    );
-  }
-}
-
-class NewTransactionCall {
-  Future<ApiCallResponse> call({
-    String? type = '',
-    String? amount = '',
-    int? idUser,
-  }) {
-    final ffApiRequestBody = '''
-{
-  "type": "${type}",
-  "amount": "${amount}"
-}''';
-    return ApiManager.instance.makeApiCall(
-      callName: 'new transaction',
-      apiUrl:
-          '${WalletGroup.baseUrl}/${idUser}?consumer_key=ck_aa336b291d7f28b57c830ae5472a06d4d8e6a1ee&consumer_secret=cs_728cb39cc32c4d5d26c01977b84cba580bca36c9',
-      callType: ApiCallType.POST,
-      headers: {},
-      params: {},
-      body: ffApiRequestBody,
-      bodyType: BodyType.JSON,
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,
@@ -137,7 +108,7 @@ class GetProductsCall {
     int? author,
     String? type = '',
     String? category = '',
-  }) {
+  }) async {
     return ApiManager.instance.makeApiCall(
       callName: 'get products',
       apiUrl: 'https://staging.rifamas.es/wp-json/wc/v3/products',
@@ -172,10 +143,50 @@ class GetProductsCall {
       );
 }
 
+class GetHomeProductsCall {
+  static Future<ApiCallResponse> call({
+    String? search = '',
+    int? perPage = 10,
+    int? page = 1,
+    int? author,
+    String? category = '',
+  }) async {
+    return ApiManager.instance.makeApiCall(
+      callName: 'get Home Products',
+      apiUrl: 'https://staging.rifamas.es/wp-json/wc/v3/products',
+      callType: ApiCallType.GET,
+      headers: {},
+      params: {
+        'consumer_key': "ck_aa336b291d7f28b57c830ae5472a06d4d8e6a1ee",
+        'consumer_secret': "cs_728cb39cc32c4d5d26c01977b84cba580bca36c9",
+        'search': search,
+        'per_page': perPage,
+        'page': page,
+        'category': category,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  static dynamic productName(dynamic response) => getJsonField(
+        response,
+        r'''$[:].name''',
+        true,
+      );
+  static dynamic productImage(dynamic response) => getJsonField(
+        response,
+        r'''$[:].images[0].src''',
+        true,
+      );
+}
+
 class GetSingleProductCall {
   static Future<ApiCallResponse> call({
     int? idProduct,
-  }) {
+  }) async {
     return ApiManager.instance.makeApiCall(
       callName: 'get single product',
       apiUrl: 'https://staging.rifamas.es/wp-json/wc/v3/products/${idProduct}/',
@@ -197,7 +208,7 @@ class LoginCall {
   static Future<ApiCallResponse> call({
     String? username = '',
     String? password = '',
-  }) {
+  }) async {
     return ApiManager.instance.makeApiCall(
       callName: 'login',
       apiUrl: 'https://staging.rifamas.es/wp-json/api/v1/user_data',
@@ -230,7 +241,7 @@ class RegisterCall {
     String? email = 'brupadiro@hotmail.com',
     String? password = '983f07553',
     String? roles = 'customer',
-  }) {
+  }) async {
     return ApiManager.instance.makeApiCall(
       callName: 'register',
       apiUrl: 'https://staging.rifamas.es/wp-json/wp/v2/users/',
@@ -261,16 +272,18 @@ class CreateProductCall {
     String? category = '',
     String? productState = '',
     String? rifaType2 = '',
-    int? price,
-    int? pesoProducto,
-    int? maxTickets,
-    int? lotteryPrice,
+    String? price = '',
+    String? pesoProducto = '',
+    String? maxTickets = '',
+    String? lotteryPrice = '',
     String? description = '',
     String? shortDescription = '',
     String? type = '',
-    FFUploadedFile? imagen,
+    List<FFUploadedFile>? imagesList,
     int? author,
-  }) {
+  }) async {
+    final images = imagesList ?? [];
+
     return ApiManager.instance.makeApiCall(
       callName: 'create product',
       apiUrl: 'https://staging.rifamas.es/wp-json/rifamas/v1/crear-producto',
@@ -284,12 +297,14 @@ class CreateProductCall {
         '_tipo_rifa_1': rifaType,
         '_tipo_rifa_2': rifaType2,
         'precio': price,
-        'imagen': imagen,
+        'images': images,
         '_max_tickets': maxTickets,
         '_lottery_price': lotteryPrice,
         'author': author,
         'peso_producto': pesoProducto,
         '_weight_product': pesoProducto,
+        '_product_state': productState,
+        'category': category,
       },
       bodyType: BodyType.MULTIPART,
       returnBody: true,
@@ -301,7 +316,7 @@ class CreateProductCall {
 }
 
 class CategoriesCall {
-  static Future<ApiCallResponse> call() {
+  static Future<ApiCallResponse> call() async {
     return ApiManager.instance.makeApiCall(
       callName: 'categories',
       apiUrl: 'https://staging.rifamas.es/wp-json/wc/v3/products/categories/',
@@ -310,6 +325,7 @@ class CategoriesCall {
       params: {
         'consumer_key': "ck_aa336b291d7f28b57c830ae5472a06d4d8e6a1ee",
         'consumer_secret': "cs_728cb39cc32c4d5d26c01977b84cba580bca36c9",
+        'per_page': 20,
       },
       returnBody: true,
       encodeBodyUtf8: false,
@@ -333,7 +349,7 @@ class CategoriesCall {
 class UploadMediaCall {
   static Future<ApiCallResponse> call({
     String? mediaAttachment = '',
-  }) {
+  }) async {
     return ApiManager.instance.makeApiCall(
       callName: 'upload media',
       apiUrl: 'https://staging.rifamas.es/wp-json/wp/v2/media/',
@@ -352,7 +368,7 @@ class UploadMediaCall {
 }
 
 class CreateMembresyCall {
-  static Future<ApiCallResponse> call() {
+  static Future<ApiCallResponse> call() async {
     return ApiManager.instance.makeApiCall(
       callName: 'create membresy',
       apiUrl:
@@ -378,7 +394,7 @@ class CreateGiftCall {
     String? name = '',
     String? author = '',
     String? type = '',
-  }) {
+  }) async {
     return ApiManager.instance.makeApiCall(
       callName: 'create gift',
       apiUrl: 'https://staging.rifamas.es/wp-json/rifamas/v1/crear-regalo',
@@ -405,7 +421,7 @@ class CreateGiftCall {
 class GetSubscriptionsCall {
   static Future<ApiCallResponse> call({
     String? author = '',
-  }) {
+  }) async {
     return ApiManager.instance.makeApiCall(
       callName: 'get subscriptions',
       apiUrl:
@@ -426,7 +442,7 @@ class GetSubscriptionsCall {
 class UploadImageCall {
   static Future<ApiCallResponse> call({
     FFUploadedFile? file,
-  }) {
+  }) async {
     return ApiManager.instance.makeApiCall(
       callName: 'upload image',
       apiUrl: 'https://staging.rifamas.es/wp-json/rifamas/v1/upload-image',
@@ -447,7 +463,7 @@ class UploadImageCall {
 class GetRelatedProductsCall {
   static Future<ApiCallResponse> call({
     String? idMembershipData = '',
-  }) {
+  }) async {
     return ApiManager.instance.makeApiCall(
       callName: 'get related products',
       apiUrl: 'https://staging.rifamas.es/wp-json/rifamas/v1/products/meta',
@@ -469,7 +485,7 @@ class BuyLotteryCall {
     String? lotteryNumber = '',
     String? productId = '',
     String? userId = '',
-  }) {
+  }) async {
     final ffApiRequestBody = '''
 {
   "payment_method": "bacs",
@@ -510,7 +526,7 @@ class BuyLotteryCall {
 class FavoritesCall {
   static Future<ApiCallResponse> call({
     List<int>? favoritesList,
-  }) {
+  }) async {
     final favorites = _serializeList(favoritesList);
 
     return ApiManager.instance.makeApiCall(
@@ -534,7 +550,11 @@ class AddToCartCall {
     int? userId,
     int? productId,
     int? variationId = 0,
-  }) {
+    List<int>? ticketsList,
+    int? price,
+  }) async {
+    final tickets = _serializeList(ticketsList);
+
     return ApiManager.instance.makeApiCall(
       callName: 'add to cart',
       apiUrl: 'https://staging.rifamas.es/wp-json/wp/v2/add_to_cart_product',
@@ -544,6 +564,8 @@ class AddToCartCall {
         'user_id': userId,
         'product_id': productId,
         'variation_id': variationId,
+        'tickets': tickets,
+        'price': price,
       },
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
@@ -557,7 +579,7 @@ class AddToCartCall {
 class ComprobarMembresiaCall {
   static Future<ApiCallResponse> call({
     int? userId,
-  }) {
+  }) async {
     return ApiManager.instance.makeApiCall(
       callName: 'comprobar membresia',
       apiUrl:
@@ -579,7 +601,7 @@ class MyOrderedProductsCall {
   static Future<ApiCallResponse> call({
     int? userId,
     String? type = '',
-  }) {
+  }) async {
     return ApiManager.instance.makeApiCall(
       callName: 'my ordered products',
       apiUrl: 'https://staging.rifamas.es/wp-json/rifamas/v1/productos_usuario',
@@ -600,7 +622,7 @@ class MyOrderedProductsCall {
 class SelledProductsCall {
   static Future<ApiCallResponse> call({
     int? userId,
-  }) {
+  }) async {
     return ApiManager.instance.makeApiCall(
       callName: 'selled products',
       apiUrl:

@@ -4,6 +4,7 @@ import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
 import 'terms_page_widget.dart' show TermsPageWidget;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';

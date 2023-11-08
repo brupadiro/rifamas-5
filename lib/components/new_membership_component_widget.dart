@@ -3,6 +3,7 @@ import '/ff/ff_theme.dart';
 import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'new_membership_component_model.dart';
@@ -99,7 +100,7 @@ class _NewMembershipComponentWidgetState
                                   ),
                         ),
                         Text(
-                          '50 €',
+                          '24,99 €',
                           style: FFTheme.of(context)
                               .displayMedium
                               .override(
@@ -108,26 +109,7 @@ class _NewMembershipComponentWidgetState
                                 fontWeight: FontWeight.w800,
                               ),
                         ),
-                        Text(
-                          'Sorteos/mes: 4',
-                          style:
-                              FFTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Montserrat',
-                                    color: FFTheme.of(context).primary,
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                        Text(
-                          'Papeletas/sorteo:3',
-                          style:
-                              FFTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Montserrat',
-                                    color: FFTheme.of(context).primary,
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
+
                       ],
                     ),
                   ),
@@ -156,11 +138,10 @@ class _NewMembershipComponentWidgetState
                   );
                   if ((_model.apiResultywtCopyCopy?.succeeded ?? true)) {
                     Navigator.pop(context);
-                    await launchURL(
-                        'https://staging.rifamas.es/?user_id=${getJsonField(
-                      FFAppState().jwtuser,
-                      r'''$.ID''',
-                    ).toString()}');
+
+                    context.pushNamed('webViewPage',queryParameters: {
+                                          'route': 'membership',
+                                        });
                   }
 
                   setState(() {});

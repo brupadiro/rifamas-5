@@ -7,6 +7,7 @@ import '/ff/ff_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'chat_single_page_model.dart';
@@ -15,10 +16,12 @@ export 'chat_single_page_model.dart';
 class ChatSinglePageWidget extends StatefulWidget {
   const ChatSinglePageWidget({
     Key? key,
+    required this.chatReference,
     required this.chat,
   }) : super(key: key);
 
-  final DocumentReference? chat;
+  final DocumentReference? chatReference;
+  final ChatsRecord? chat;
 
   @override
   _ChatSinglePageWidgetState createState() => _ChatSinglePageWidgetState();
@@ -35,6 +38,8 @@ class _ChatSinglePageWidgetState extends State<ChatSinglePageWidget> {
     _model = createModel(context, () => ChatSinglePageModel());
 
     _model.textController ??= TextEditingController(text: _model.message);
+    _model.textFieldFocusNode ??= FocusNode();
+
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -47,6 +52,15 @@ class _ChatSinglePageWidgetState extends State<ChatSinglePageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -116,34 +130,69 @@ class _ChatSinglePageWidgetState extends State<ChatSinglePageWidget> {
                                     mainAxisSize: MainAxisSize.max,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Text(
-                                        'Pedro',
-                                        style: FFTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'Montserrat',
-                                              color:
-                                                  FFTheme.of(context)
-                                                      .primary,
-                                              fontWeight: FontWeight.w500,
+                                      Align(
+                                        alignment:
+                                            AlignmentDirectional(1.00, 0.00),
+                                        child: Container(
+                                          width: 150.0,
+                                          height: 20.0,
+                                          decoration: BoxDecoration(
+                                            color: FFTheme.of(context)
+                                                .secondaryBackground,
+                                          ),
+                                          child: Align(
+                                            alignment: AlignmentDirectional(
+                                                1.00, 0.00),
+                                            child: Text(
+                                              valueOrDefault<String>(
+                                                widget.chat?.seller,
+                                                'N/A',
+                                              ),
+                                              style: FFTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily: 'Montserrat',
+                                                    color: FFTheme.of(
+                                                            context)
+                                                        .primary,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
                                             ),
+                                          ),
+                                        ),
                                       ),
-                                      Text(
-                                        'Rifa bicicleta',
-                                        style: FFTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'Montserrat',
-                                              fontSize: 16.0,
-                                              fontWeight: FontWeight.w900,
+                                      Container(
+                                        width: 100.0,
+                                        height: 20.0,
+                                        decoration: BoxDecoration(
+                                          color: FFTheme.of(context)
+                                              .secondaryBackground,
+                                        ),
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(1.00, 0.00),
+                                          child: Text(
+                                            valueOrDefault<String>(
+                                              widget.chat?.product,
+                                              'N/A',
                                             ),
+                                            style: FFTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.w900,
+                                                ),
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10.0),
                                     child: Image.network(
-                                      'https://picsum.photos/seed/626/600',
+                                      widget.chat!.image,
                                       width: 40.0,
                                       height: 40.0,
                                       fit: BoxFit.cover,
@@ -198,7 +247,15 @@ class _ChatSinglePageWidgetState extends State<ChatSinglePageWidget> {
                                     ),
                                   ),
                                   StreamBuilder<List<ChatMessagesRecord>>(
-                                    stream: queryChatMessagesRecord(),
+                                    stream: queryChatMessagesRecord(
+                                      queryBuilder: (chatMessagesRecord) =>
+                                          chatMessagesRecord
+                                              .where(
+                                                'chat',
+                                                isEqualTo: widget.chatReference,
+                                              )
+                                              .orderBy('timestamp'),
+                                    ),
                                     builder: (context, snapshot) {
                                       // Customize what your widget looks like when it's loading.
                                       if (!snapshot.hasData) {
@@ -227,66 +284,132 @@ class _ChatSinglePageWidgetState extends State<ChatSinglePageWidget> {
                                           final columnChatMessagesRecord =
                                               columnChatMessagesRecordList[
                                                   columnIndex];
-                                          return Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    12.0, 0.0, 12.0, 6.0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          15.0),
-                                                  child: Container(
-                                                    constraints: BoxConstraints(
-                                                      maxWidth:
-                                                          MediaQuery.sizeOf(
-                                                                      context)
-                                                                  .width *
-                                                              0.5,
-                                                      maxHeight:
-                                                          MediaQuery.sizeOf(
-                                                                      context)
-                                                                  .height *
-                                                              0.25,
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      color: Color(0xFFE3E5E7),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15.0),
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  12.0,
-                                                                  12.0,
-                                                                  12.0,
-                                                                  12.0),
-                                                      child: Text(
-                                                        columnChatMessagesRecord
-                                                            .text,
-                                                        style:
-                                                            FFTheme.of(
-                                                                    context)
+                                          return Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              if (columnChatMessagesRecord
+                                                      .user ==
+                                                  getJsonField(
+                                                    FFAppState().jwtuser,
+                                                    r'''$.ID''',
+                                                  ))
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          12.0, 0.0, 12.0, 6.0),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15.0),
+                                                        child: Container(
+                                                          constraints:
+                                                              BoxConstraints(
+                                                            maxWidth: MediaQuery
+                                                                        .sizeOf(
+                                                                            context)
+                                                                    .width *
+                                                                0.5,
+                                                            maxHeight: MediaQuery
+                                                                        .sizeOf(
+                                                                            context)
+                                                                    .height *
+                                                                0.25,
+                                                          ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Color(
+                                                                0xFFE3E5E7),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15.0),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        12.0,
+                                                                        12.0,
+                                                                        12.0,
+                                                                        12.0),
+                                                            child: Text(
+                                                              columnChatMessagesRecord
+                                                                  .text,
+                                                              style: FFTheme
+                                                                      .of(context)
+                                                                  .bodyMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    color: FFTheme.of(
+                                                                            context)
+                                                                        .primaryText,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              if (columnChatMessagesRecord
+                                                      .user !=
+                                                  getJsonField(
+                                                    FFAppState().jwtuser,
+                                                    r'''$.ID''',
+                                                  ))
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          12.0, 0.0, 12.0, 6.0),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      18.0),
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      12.0,
+                                                                      12.0,
+                                                                      12.0,
+                                                                      12.0),
+                                                          child: Text(
+                                                            columnChatMessagesRecord
+                                                                .text,
+                                                            style: FFTheme
+                                                                    .of(context)
                                                                 .bodyMedium
                                                                 .override(
                                                                   fontFamily:
                                                                       'Montserrat',
-                                                                  color: FFTheme.of(
-                                                                          context)
-                                                                      .primaryText,
+                                                                  color: Color(
+                                                                      0xFF3D3535),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
                                                                 ),
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
+                                                    ],
                                                   ),
                                                 ),
-                                              ],
-                                            ),
+                                            ],
                                           );
                                         }),
                                       );
@@ -328,6 +451,7 @@ class _ChatSinglePageWidgetState extends State<ChatSinglePageWidget> {
                                       15.0, 0.0, 8.0, 0.0),
                                   child: TextFormField(
                                     controller: _model.textController,
+                                    focusNode: _model.textFieldFocusNode,
                                     onChanged: (_) => EasyDebounce.debounce(
                                       '_model.textController',
                                       Duration(milliseconds: 2000),
@@ -382,11 +506,23 @@ class _ChatSinglePageWidgetState extends State<ChatSinglePageWidget> {
                                       onPressed: () async {
                                         await ChatMessagesRecord.collection
                                             .doc()
-                                            .set(createChatMessagesRecordData(
-                                              text: _model.textController.text,
-                                              image: '',
-                                              chat: widget.chat,
-                                            ));
+                                            .set({
+                                          ...createChatMessagesRecordData(
+                                            text: _model.textController.text,
+                                            image: '',
+                                            chat: widget.chat?.reference,
+                                            user: getJsonField(
+                                              FFAppState().jwtuser,
+                                              r'''$.ID''',
+                                            ),
+                                          ),
+                                          ...mapToFirestore(
+                                            {
+                                              'timestamp':
+                                                  FieldValue.serverTimestamp(),
+                                            },
+                                          ),
+                                        });
                                         setState(() {
                                           _model.textController?.clear();
                                         });

@@ -3,7 +3,7 @@ import '/ff/ff_theme.dart';
 import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'monedero_page_model.dart';
@@ -38,6 +38,15 @@ class _MonederoPageWidgetState extends State<MonederoPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -96,11 +105,14 @@ class _MonederoPageWidgetState extends State<MonederoPageWidget> {
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  FaIcon(
-                                    FontAwesomeIcons.creditCard,
-                                    color: FFTheme.of(context)
-                                        .primaryText,
-                                    size: 24.0,
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: Image.asset(
+                                      'assets/images/icono-recarga.jpg',
+                                      width: 50.0,
+                                      height: 50.0,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
@@ -155,11 +167,14 @@ class _MonederoPageWidgetState extends State<MonederoPageWidget> {
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  FaIcon(
-                                    FontAwesomeIcons.creditCard,
-                                    color: FFTheme.of(context)
-                                        .primaryText,
-                                    size: 24.0,
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: Image.asset(
+                                      'assets/images/icono-saldo.jpg',
+                                      width: 50.0,
+                                      height: 50.0,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
@@ -215,11 +230,14 @@ class _MonederoPageWidgetState extends State<MonederoPageWidget> {
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  FaIcon(
-                                    FontAwesomeIcons.creditCard,
-                                    color: FFTheme.of(context)
-                                        .primaryText,
-                                    size: 24.0,
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: Image.asset(
+                                      'assets/images/icono-transacciones.jpg',
+                                      width: 50.0,
+                                      height: 50.0,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
@@ -274,11 +292,14 @@ class _MonederoPageWidgetState extends State<MonederoPageWidget> {
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  FaIcon(
-                                    FontAwesomeIcons.creditCard,
-                                    color: FFTheme.of(context)
-                                        .primaryText,
-                                    size: 24.0,
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: Image.asset(
+                                      'assets/images/icono-retiros.jpg',
+                                      width: 50.0,
+                                      height: 50.0,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(

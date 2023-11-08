@@ -6,6 +6,7 @@ import '/ff/ff_widgets.dart';
 import '/pages/loteries/components/number_select_component/number_select_component_widget.dart';
 import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -126,11 +127,8 @@ class _LotterySelectComponentWidgetState
                               ),
                               productId: widget.idProduct,
                             );
-                            await launchURL(
-                                'https://staging.rifamas.es/?user_id=${getJsonField(
-                              FFAppState().jwtuser,
-                              r'''$.ID''',
-                            ).toString()}');
+
+                            context.pushNamed('webViewPage');
                           },
                           text: 'SELECCION AL AZAR',
                           icon: FaIcon(

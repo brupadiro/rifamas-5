@@ -36,11 +36,29 @@ class ChatsRecord extends FirestoreRecord {
   String get seller => _seller ?? '';
   bool hasSeller() => _seller != null;
 
+  // "image" field.
+  String? _image;
+  String get image => _image ?? '';
+  bool hasImage() => _image != null;
+
+  // "user" field.
+  String? _user;
+  String get user => _user ?? '';
+  bool hasUser() => _user != null;
+
+  // "users" field.
+  List<int>? _users;
+  List<int> get users => _users ?? const [];
+  bool hasUsers() => _users != null;
+
   void _initializeFields() {
     _lastMessage = snapshotData['last_message'] as String?;
     _lastMessageTime = snapshotData['last_message_time'] as DateTime?;
     _product = snapshotData['product'] as String?;
     _seller = snapshotData['seller'] as String?;
+    _image = snapshotData['image'] as String?;
+    _user = snapshotData['user'] as String?;
+    _users = getDataList(snapshotData['users']);
   }
 
   static CollectionReference get collection =>
@@ -81,6 +99,8 @@ Map<String, dynamic> createChatsRecordData({
   DateTime? lastMessageTime,
   String? product,
   String? seller,
+  String? image,
+  String? user,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -88,6 +108,8 @@ Map<String, dynamic> createChatsRecordData({
       'last_message_time': lastMessageTime,
       'product': product,
       'seller': seller,
+      'image': image,
+      'user': user,
     }.withoutNulls,
   );
 
@@ -99,15 +121,26 @@ class ChatsRecordDocumentEquality implements Equality<ChatsRecord> {
 
   @override
   bool equals(ChatsRecord? e1, ChatsRecord? e2) {
+    const listEquality = ListEquality();
     return e1?.lastMessage == e2?.lastMessage &&
         e1?.lastMessageTime == e2?.lastMessageTime &&
         e1?.product == e2?.product &&
-        e1?.seller == e2?.seller;
+        e1?.seller == e2?.seller &&
+        e1?.image == e2?.image &&
+        e1?.user == e2?.user &&
+        listEquality.equals(e1?.users, e2?.users);
   }
 
   @override
-  int hash(ChatsRecord? e) => const ListEquality()
-      .hash([e?.lastMessage, e?.lastMessageTime, e?.product, e?.seller]);
+  int hash(ChatsRecord? e) => const ListEquality().hash([
+        e?.lastMessage,
+        e?.lastMessageTime,
+        e?.product,
+        e?.seller,
+        e?.image,
+        e?.user,
+        e?.users
+      ]);
 
   @override
   bool isValidKey(Object? o) => o is ChatsRecord;

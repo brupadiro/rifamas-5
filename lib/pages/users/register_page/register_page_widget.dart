@@ -4,6 +4,7 @@ import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'register_page_model.dart';
@@ -27,10 +28,15 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
     _model = createModel(context, () => RegisterPageModel());
 
     _model.textController1 ??= TextEditingController(text: _model.email);
+    _model.textFieldFocusNode1 ??= FocusNode();
     _model.textController2 ??= TextEditingController(text: _model.username);
+    _model.textFieldFocusNode2 ??= FocusNode();
     _model.textController3 ??= TextEditingController(text: _model.firstName);
+    _model.textFieldFocusNode3 ??= FocusNode();
     _model.textController4 ??= TextEditingController(text: _model.lastName);
+    _model.textFieldFocusNode4 ??= FocusNode();
     _model.textController5 ??= TextEditingController(text: _model.password);
+    _model.textFieldFocusNode5 ??= FocusNode();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -43,6 +49,15 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -126,6 +141,7 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                                       0.0, 0.0, 0.0, 16.0),
                                   child: TextFormField(
                                     controller: _model.textController1,
+                                    focusNode: _model.textFieldFocusNode1,
                                     onChanged: (_) => EasyDebounce.debounce(
                                       '_model.textController1',
                                       Duration(milliseconds: 2000),
@@ -190,6 +206,7 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                                       0.0, 0.0, 0.0, 16.0),
                                   child: TextFormField(
                                     controller: _model.textController2,
+                                    focusNode: _model.textFieldFocusNode2,
                                     onChanged: (_) => EasyDebounce.debounce(
                                       '_model.textController2',
                                       Duration(milliseconds: 2000),
@@ -254,6 +271,7 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                                       0.0, 0.0, 0.0, 16.0),
                                   child: TextFormField(
                                     controller: _model.textController3,
+                                    focusNode: _model.textFieldFocusNode3,
                                     onChanged: (_) => EasyDebounce.debounce(
                                       '_model.textController3',
                                       Duration(milliseconds: 2000),
@@ -317,6 +335,7 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                                       0.0, 0.0, 0.0, 16.0),
                                   child: TextFormField(
                                     controller: _model.textController4,
+                                    focusNode: _model.textFieldFocusNode4,
                                     onChanged: (_) => EasyDebounce.debounce(
                                       '_model.textController4',
                                       Duration(milliseconds: 2000),
@@ -381,6 +400,7 @@ class _RegisterPageWidgetState extends State<RegisterPageWidget> {
                                       0.0, 0.0, 0.0, 16.0),
                                   child: TextFormField(
                                     controller: _model.textController5,
+                                    focusNode: _model.textFieldFocusNode5,
                                     onChanged: (_) => EasyDebounce.debounce(
                                       '_model.textController5',
                                       Duration(milliseconds: 2000),

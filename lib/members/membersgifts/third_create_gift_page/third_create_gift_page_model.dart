@@ -9,6 +9,7 @@ import 'third_create_gift_page_widget.dart' show ThirdCreateGiftPageWidget;
 import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -26,12 +27,12 @@ class ThirdCreateGiftPageModel
 
   final unfocusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
-  // Model for secondaaryHeaderComponent component.
-  late SecondaaryHeaderComponentModel secondaaryHeaderComponentModel;
   // State field(s) for TextField widget.
+  FocusNode? textFieldFocusNode1;
   TextEditingController? textController1;
   String? Function(BuildContext, String?)? textController1Validator;
   // State field(s) for TextField widget.
+  FocusNode? textFieldFocusNode2;
   TextEditingController? textController2;
   String? Function(BuildContext, String?)? textController2Validator;
   bool isDataUploading = false;
@@ -42,6 +43,8 @@ class ThirdCreateGiftPageModel
   ApiCallResponse? apiResultsul;
   // Stores action output result for [Backend Call - API (create gift)] action in Button widget.
   ApiCallResponse? apiResultjow;
+  // Model for secondaaryHeaderComponent component.
+  late SecondaaryHeaderComponentModel secondaaryHeaderComponentModel;
 
   /// Initialization and disposal methods.
 
@@ -52,9 +55,13 @@ class ThirdCreateGiftPageModel
 
   void dispose() {
     unfocusNode.dispose();
-    secondaaryHeaderComponentModel.dispose();
+    textFieldFocusNode1?.dispose();
     textController1?.dispose();
+
+    textFieldFocusNode2?.dispose();
     textController2?.dispose();
+
+    secondaaryHeaderComponentModel.dispose();
   }
 
   /// Action blocks are added here.

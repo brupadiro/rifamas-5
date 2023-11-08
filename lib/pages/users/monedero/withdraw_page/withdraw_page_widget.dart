@@ -8,6 +8,7 @@ import '/ff/ff_widgets.dart';
 import '/ff/form_field_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'withdraw_page_model.dart';
@@ -32,6 +33,7 @@ class _WithdrawPageWidgetState extends State<WithdrawPageWidget> {
 
     _model.textController ??=
         TextEditingController(text: _model.amount.toString());
+    _model.textFieldFocusNode ??= FocusNode();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -44,6 +46,15 @@ class _WithdrawPageWidgetState extends State<WithdrawPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -92,7 +103,7 @@ class _WithdrawPageWidgetState extends State<WithdrawPageWidget> {
                           iconPadding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 0.0),
                           color: _model.withdrawPage == 0
-                              ? Color(0x780286E7)
+                              ? FFTheme.of(context).primary
                               : FFTheme.of(context)
                                   .secondaryBackground,
                           textStyle:
@@ -101,13 +112,13 @@ class _WithdrawPageWidgetState extends State<WithdrawPageWidget> {
                                     color: _model.withdrawPage == 0
                                         ? FFTheme.of(context)
                                             .secondaryBackground
-                                        : Color(0x780286E7),
-                                    fontSize: 16.0,
+                                        : FFTheme.of(context).primary,
+                                    fontSize: 18.0,
                                     fontWeight: FontWeight.w600,
                                   ),
                           elevation: 0.0,
                           borderSide: BorderSide(
-                            color: Color(0x780286E7),
+                            color: FFTheme.of(context).primary,
                             width: 1.0,
                           ),
                           borderRadius: BorderRadius.circular(8.0),
@@ -132,7 +143,7 @@ class _WithdrawPageWidgetState extends State<WithdrawPageWidget> {
                           iconPadding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 0.0),
                           color: _model.withdrawPage == 1
-                              ? Color(0x780286E7)
+                              ? Color(0xFF0286E7)
                               : FFTheme.of(context)
                                   .secondaryBackground,
                           textStyle:
@@ -141,13 +152,13 @@ class _WithdrawPageWidgetState extends State<WithdrawPageWidget> {
                                     color: _model.withdrawPage == 1
                                         ? FFTheme.of(context)
                                             .secondaryBackground
-                                        : Color(0x780286E7),
-                                    fontSize: 16.0,
+                                        : FFTheme.of(context).primary,
+                                    fontSize: 18.0,
                                     fontWeight: FontWeight.w600,
                                   ),
                           elevation: 0.0,
                           borderSide: BorderSide(
-                            color: Color(0x780286E7),
+                            color: Color(0xFF0286E7),
                             width: 1.0,
                           ),
                           borderRadius: BorderRadius.circular(8.0),
@@ -172,7 +183,7 @@ class _WithdrawPageWidgetState extends State<WithdrawPageWidget> {
                           iconPadding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 0.0),
                           color: _model.withdrawPage == 2
-                              ? Color(0x780286E7)
+                              ? Color(0xFF0286E7)
                               : FFTheme.of(context)
                                   .secondaryBackground,
                           textStyle:
@@ -181,13 +192,13 @@ class _WithdrawPageWidgetState extends State<WithdrawPageWidget> {
                                     color: _model.withdrawPage == 2
                                         ? FFTheme.of(context)
                                             .secondaryBackground
-                                        : Color(0x780286E7),
-                                    fontSize: 16.0,
+                                        : FFTheme.of(context).primary,
+                                    fontSize: 18.0,
                                     fontWeight: FontWeight.w600,
                                   ),
                           elevation: 0.0,
                           borderSide: BorderSide(
-                            color: Color(0x780286E7),
+                            color: FFTheme.of(context).primary,
                             width: 1.0,
                           ),
                           borderRadius: BorderRadius.circular(8.0),
@@ -214,240 +225,250 @@ class _WithdrawPageWidgetState extends State<WithdrawPageWidget> {
                         children: [
                           Align(
                             alignment: AlignmentDirectional(0.00, 0.00),
-                            child: Container(
-                              width: MediaQuery.sizeOf(context).width * 0.7,
-                              height: 400.0,
-                              decoration: BoxDecoration(
-                                color: FFTheme.of(context)
-                                    .secondaryBackground,
-                                borderRadius: BorderRadius.circular(25.0),
-                                border: Border.all(
-                                  color: FFTheme.of(context).primary,
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 70.0, 0.0, 0.0),
+                              child: Container(
+                                width: MediaQuery.sizeOf(context).width * 0.7,
+                                height: MediaQuery.sizeOf(context).height * 0.5,
+                                decoration: BoxDecoration(
+                                  color: FFTheme.of(context)
+                                      .secondaryBackground,
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  border: Border.all(
+                                    color: FFTheme.of(context).primary,
+                                  ),
                                 ),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    10.0, 10.0, 10.0, 10.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 0.0, 50.0),
-                                      child: Text(
-                                        '${FFAppState().currentBalance}€ ',
-                                        style: FFTheme.of(context)
-                                            .headlineLarge
-                                            .override(
-                                              fontFamily: 'Montserrat',
-                                              color:
-                                                  FFTheme.of(context)
-                                                      .primary,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                    ),
-                                    Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 10.0),
-                                          child: Text(
-                                            'CANTIDAD A RETIRAR',
-                                            style: FFTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  fontFamily: 'Montserrat',
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                          ),
-                                        ),
-                                        TextFormField(
-                                          controller: _model.textController,
-                                          autofocus: true,
-                                          obscureText: false,
-                                          decoration: InputDecoration(
-                                            labelStyle:
-                                                FFTheme.of(context)
-                                                    .labelMedium,
-                                            hintStyle:
-                                                FFTheme.of(context)
-                                                    .labelMedium,
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color:
-                                                    FFTheme.of(context)
-                                                        .primary,
-                                                width: 2.0,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(30.0),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color:
-                                                    FFTheme.of(context)
-                                                        .primary,
-                                                width: 2.0,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(30.0),
-                                            ),
-                                            errorBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color:
-                                                    FFTheme.of(context)
-                                                        .error,
-                                                width: 2.0,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(30.0),
-                                            ),
-                                            focusedErrorBorder:
-                                                OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color:
-                                                    FFTheme.of(context)
-                                                        .error,
-                                                width: 2.0,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(30.0),
-                                            ),
-                                          ),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      10.0, 10.0, 10.0, 10.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 0.0, 0.0, 50.0),
+                                        child: Text(
+                                          '${FFAppState().currentBalance}€ ',
                                           style: FFTheme.of(context)
-                                              .bodyMedium,
-                                          validator: _model
-                                              .textControllerValidator
-                                              .asValidator(context),
+                                              .headlineLarge
+                                              .override(
+                                                fontFamily: 'Montserrat',
+                                                color:
+                                                    FFTheme.of(context)
+                                                        .primary,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                         ),
-                                      ],
-                                    ),
-                                    Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 10.0),
-                                          child: Text(
-                                            'METODO DE PAGO',
-                                            style: FFTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  fontFamily: 'Montserrat',
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                          ),
-                                        ),
-                                        FFDropDown<String>(
-                                          controller:
-                                              _model.dropDownValueController ??=
-                                                  FormFieldController<String>(
-                                            _model.dropDownValue ??=
-                                                'Transferencia bancaria',
-                                          ),
-                                          options: [
-                                            'Transferencia bancaria',
-                                            'PAYPAL'
-                                          ],
-                                          onChanged: (val) => setState(
-                                              () => _model.dropDownValue = val),
-                                          width: 300.0,
-                                          height: 50.0,
-                                          textStyle:
-                                              FFTheme.of(context)
-                                                  .bodyMedium,
-                                          hintText: 'Seleccione una opcion',
-                                          icon: Icon(
-                                            Icons.keyboard_arrow_down_rounded,
-                                            color: FFTheme.of(context)
-                                                .secondaryText,
-                                            size: 24.0,
-                                          ),
-                                          fillColor:
-                                              FFTheme.of(context)
-                                                  .secondaryBackground,
-                                          elevation: 2.0,
-                                          borderColor:
-                                              FFTheme.of(context)
-                                                  .primary,
-                                          borderWidth: 2.0,
-                                          borderRadius: 25.0,
-                                          margin:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  16.0, 4.0, 16.0, 4.0),
-                                          hidesUnderline: true,
-                                          isSearchable: false,
-                                          isMultiSelect: false,
-                                        ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 15.0, 0.0, 0.0),
-                                      child: FFButtonWidget(
-                                        onPressed: () async {
-                                          await WithdrawsRecord.collection
-                                              .doc()
-                                              .set({
-                                            ...createWithdrawsRecordData(
-                                              amount: int.tryParse(
-                                                  _model.textController.text),
-                                              type: _model.dropDownValue,
-                                              status: 'Pendiente',
-                                            ),
-                                            ...mapToFirestore(
-                                              {
-                                                'date': FieldValue
-                                                    .serverTimestamp(),
-                                              },
-                                            ),
-                                          });
-                                          await _model.pageViewController
-                                              ?.animateToPage(
-                                            1,
-                                            duration:
-                                                Duration(milliseconds: 500),
-                                            curve: Curves.ease,
-                                          );
-                                        },
-                                        text: 'RETIRAR',
-                                        options: FFButtonOptions(
-                                          width:
-                                              MediaQuery.sizeOf(context).width *
-                                                  1.0,
-                                          height: 50.0,
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 0.0),
-                                          iconPadding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0.0, 0.0, 0.0, 0.0),
-                                          color: Color(0xFF0286E7),
-                                          textStyle:
-                                              FFTheme.of(context)
-                                                  .titleSmall
+                                      ),
+                                      Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 10.0),
+                                            child: Text(
+                                              'CANTIDAD A RETIRAR',
+                                              style: FFTheme.of(
+                                                      context)
+                                                  .bodyMedium
                                                   .override(
                                                     fontFamily: 'Montserrat',
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w600,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                          elevation: 0.0,
-                                          borderSide: BorderSide(
-                                            color: Colors.transparent,
-                                            width: 1.0,
+                                            ),
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(25.0),
+                                          TextFormField(
+                                            controller: _model.textController,
+                                            focusNode:
+                                                _model.textFieldFocusNode,
+                                            autofocus: true,
+                                            obscureText: false,
+                                            decoration: InputDecoration(
+                                              labelStyle:
+                                                  FFTheme.of(context)
+                                                      .labelMedium,
+                                              hintStyle:
+                                                  FFTheme.of(context)
+                                                      .labelMedium,
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FFTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  width: 2.0,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(30.0),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FFTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  width: 2.0,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(30.0),
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FFTheme.of(
+                                                          context)
+                                                      .error,
+                                                  width: 2.0,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(30.0),
+                                              ),
+                                              focusedErrorBorder:
+                                                  OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: FFTheme.of(
+                                                          context)
+                                                      .error,
+                                                  width: 2.0,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(30.0),
+                                              ),
+                                            ),
+                                            style: FFTheme.of(context)
+                                                .bodyMedium,
+                                            validator: _model
+                                                .textControllerValidator
+                                                .asValidator(context),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 10.0),
+                                            child: Text(
+                                              'METODO DE PAGO',
+                                              style: FFTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily: 'Montserrat',
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                            ),
+                                          ),
+                                          FFDropDown<String>(
+                                            controller: _model
+                                                    .dropDownValueController ??=
+                                                FormFieldController<String>(
+                                              _model.dropDownValue ??=
+                                                  'Transferencia bancaria',
+                                            ),
+                                            options: [
+                                              'Transferencia bancaria',
+                                              'PAYPAL'
+                                            ],
+                                            onChanged: (val) => setState(() =>
+                                                _model.dropDownValue = val),
+                                            width: 300.0,
+                                            height: 50.0,
+                                            textStyle:
+                                                FFTheme.of(context)
+                                                    .bodyMedium,
+                                            hintText: 'Seleccione una opcion',
+                                            icon: Icon(
+                                              Icons.keyboard_arrow_down_rounded,
+                                              color:
+                                                  FFTheme.of(context)
+                                                      .secondaryText,
+                                              size: 24.0,
+                                            ),
+                                            fillColor:
+                                                FFTheme.of(context)
+                                                    .secondaryBackground,
+                                            elevation: 2.0,
+                                            borderColor:
+                                                FFTheme.of(context)
+                                                    .primary,
+                                            borderWidth: 2.0,
+                                            borderRadius: 25.0,
+                                            margin:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    16.0, 4.0, 16.0, 4.0),
+                                            hidesUnderline: true,
+                                            isSearchable: false,
+                                            isMultiSelect: false,
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 15.0, 0.0, 0.0),
+                                        child: FFButtonWidget(
+                                          onPressed: () async {
+                                            await WithdrawsRecord.collection
+                                                .doc()
+                                                .set({
+                                              ...createWithdrawsRecordData(
+                                                amount: int.tryParse(
+                                                    _model.textController.text),
+                                                type: _model.dropDownValue,
+                                                status: 'Pendiente',
+                                              ),
+                                              ...mapToFirestore(
+                                                {
+                                                  'date': FieldValue
+                                                      .serverTimestamp(),
+                                                },
+                                              ),
+                                            });
+                                            await _model.pageViewController
+                                                ?.animateToPage(
+                                              1,
+                                              duration:
+                                                  Duration(milliseconds: 500),
+                                              curve: Curves.ease,
+                                            );
+                                          },
+                                          text: 'RETIRAR',
+                                          options: FFButtonOptions(
+                                            width: MediaQuery.sizeOf(context)
+                                                    .width *
+                                                1.0,
+                                            height: 50.0,
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 0.0),
+                                            iconPadding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0.0, 0.0, 0.0, 0.0),
+                                            color: Color(0xFF0286E7),
+                                            textStyle:
+                                                FFTheme.of(context)
+                                                    .titleSmall
+                                                    .override(
+                                                      fontFamily: 'Montserrat',
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                            elevation: 0.0,
+                                            borderSide: BorderSide(
+                                              color: Colors.transparent,
+                                              width: 1.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(25.0),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

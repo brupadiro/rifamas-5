@@ -1,14 +1,12 @@
-import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
-import '/backend/backend.dart';
 import '/components/secondaary_header_component_widget.dart';
 import '/ff/ff_theme.dart';
 import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
 import 'recharge_page_widget.dart' show RechargePageWidget;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -23,12 +21,11 @@ class RechargePageModel extends FFModel<RechargePageWidget> {
   // Model for secondaaryHeaderComponent component.
   late SecondaaryHeaderComponentModel secondaaryHeaderComponentModel;
   // State field(s) for TextField widget.
+  FocusNode? textFieldFocusNode;
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
-  // Stores action output result for [Backend Call - API (new transaction)] action in Button widget.
+  // Stores action output result for [Backend Call - API (add to cart)] action in Button widget.
   ApiCallResponse? apiResulty1l;
-  // Stores action output result for [Backend Call - API (get balance)] action in Button widget.
-  ApiCallResponse? apiResult94g;
 
   /// Initialization and disposal methods.
 
@@ -40,6 +37,7 @@ class RechargePageModel extends FFModel<RechargePageWidget> {
   void dispose() {
     unfocusNode.dispose();
     secondaaryHeaderComponentModel.dispose();
+    textFieldFocusNode?.dispose();
     textController?.dispose();
   }
 

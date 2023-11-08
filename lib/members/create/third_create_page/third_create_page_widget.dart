@@ -5,6 +5,7 @@ import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'third_create_page_model.dart';
@@ -29,16 +30,22 @@ class _ThirdCreatePageWidgetState extends State<ThirdCreatePageWidget> {
 
     _model.textController1 ??=
         TextEditingController(text: _model.variacion1?.toString());
+    _model.textFieldFocusNode1 ??= FocusNode();
     _model.textController2 ??=
         TextEditingController(text: _model.papeletasvariacion1?.toString());
+    _model.textFieldFocusNode2 ??= FocusNode();
     _model.textController3 ??=
         TextEditingController(text: _model.variacion2?.toString());
+    _model.textFieldFocusNode3 ??= FocusNode();
     _model.textController4 ??=
         TextEditingController(text: _model.papeletavariacion2?.toString());
+    _model.textFieldFocusNode4 ??= FocusNode();
     _model.textController5 ??=
         TextEditingController(text: _model.variacion3?.toString());
+    _model.textFieldFocusNode5 ??= FocusNode();
     _model.textController6 ??=
         TextEditingController(text: _model.papeletasvariacion3?.toString());
+    _model.textFieldFocusNode6 ??= FocusNode();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -51,6 +58,15 @@ class _ThirdCreatePageWidgetState extends State<ThirdCreatePageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -64,7 +80,7 @@ class _ThirdCreatePageWidgetState extends State<ThirdCreatePageWidget> {
           alignment: AlignmentDirectional(0.0, 1.0),
           children: [
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
+              padding: EdgeInsetsDirectional.fromSTEB(10.0, 80.0, 10.0, 10.0),
               child: Container(
                 width: MediaQuery.sizeOf(context).width * 1.0,
                 height: MediaQuery.sizeOf(context).height * 1.0,
@@ -74,11 +90,6 @@ class _ThirdCreatePageWidgetState extends State<ThirdCreatePageWidget> {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      wrapWithModel(
-                        model: _model.secondaaryHeaderComponentModel,
-                        updateCallback: () => setState(() {}),
-                        child: SecondaaryHeaderComponentWidget(),
-                      ),
                       Text(
                         'Creando tu membresia...',
                         style:
@@ -113,7 +124,7 @@ class _ThirdCreatePageWidgetState extends State<ThirdCreatePageWidget> {
                             alignment: AlignmentDirectional(0.00, 0.00),
                             child: Container(
                               width: MediaQuery.sizeOf(context).width * 1.0,
-                              height: 350.0,
+                              height: 400.0,
                               decoration: BoxDecoration(
                                 color: FFTheme.of(context)
                                     .secondaryBackground,
@@ -187,6 +198,7 @@ class _ThirdCreatePageWidgetState extends State<ThirdCreatePageWidget> {
                                     ),
                                     TextFormField(
                                       controller: _model.textController1,
+                                      focusNode: _model.textFieldFocusNode1,
                                       onChanged: (_) => EasyDebounce.debounce(
                                         '_model.textController1',
                                         Duration(milliseconds: 2000),
@@ -286,6 +298,7 @@ class _ThirdCreatePageWidgetState extends State<ThirdCreatePageWidget> {
                                     ),
                                     TextFormField(
                                       controller: _model.textController2,
+                                      focusNode: _model.textFieldFocusNode2,
                                       onChanged: (_) => EasyDebounce.debounce(
                                         '_model.textController2',
                                         Duration(milliseconds: 2000),
@@ -367,7 +380,7 @@ class _ThirdCreatePageWidgetState extends State<ThirdCreatePageWidget> {
                               alignment: AlignmentDirectional(0.00, 0.00),
                               child: Container(
                                 width: MediaQuery.sizeOf(context).width * 1.0,
-                                height: 350.0,
+                                height: 400.0,
                                 decoration: BoxDecoration(
                                   color: FFTheme.of(context)
                                       .secondaryBackground,
@@ -443,6 +456,7 @@ class _ThirdCreatePageWidgetState extends State<ThirdCreatePageWidget> {
                                       ),
                                       TextFormField(
                                         controller: _model.textController3,
+                                        focusNode: _model.textFieldFocusNode3,
                                         onChanged: (_) => EasyDebounce.debounce(
                                           '_model.textController3',
                                           Duration(milliseconds: 2000),
@@ -551,6 +565,7 @@ class _ThirdCreatePageWidgetState extends State<ThirdCreatePageWidget> {
                                       ),
                                       TextFormField(
                                         controller: _model.textController4,
+                                        focusNode: _model.textFieldFocusNode4,
                                         onChanged: (_) => EasyDebounce.debounce(
                                           '_model.textController4',
                                           Duration(milliseconds: 2000),
@@ -643,7 +658,7 @@ class _ThirdCreatePageWidgetState extends State<ThirdCreatePageWidget> {
                                     0.0, 15.0, 0.0, 0.0),
                                 child: Container(
                                   width: MediaQuery.sizeOf(context).width * 1.0,
-                                  height: 350.0,
+                                  height: 400.0,
                                   decoration: BoxDecoration(
                                     color: FFTheme.of(context)
                                         .secondaryBackground,
@@ -723,6 +738,7 @@ class _ThirdCreatePageWidgetState extends State<ThirdCreatePageWidget> {
                                         ),
                                         TextFormField(
                                           controller: _model.textController5,
+                                          focusNode: _model.textFieldFocusNode5,
                                           onChanged: (_) =>
                                               EasyDebounce.debounce(
                                             '_model.textController5',
@@ -835,6 +851,7 @@ class _ThirdCreatePageWidgetState extends State<ThirdCreatePageWidget> {
                                         ),
                                         TextFormField(
                                           controller: _model.textController6,
+                                          focusNode: _model.textFieldFocusNode6,
                                           onChanged: (_) =>
                                               EasyDebounce.debounce(
                                             '_model.textController6',
@@ -1030,6 +1047,14 @@ class _ThirdCreatePageWidgetState extends State<ThirdCreatePageWidget> {
                     ],
                   ),
                 ),
+              ),
+            ),
+            Align(
+              alignment: AlignmentDirectional(0.00, -1.00),
+              child: wrapWithModel(
+                model: _model.secondaaryHeaderComponentModel,
+                updateCallback: () => setState(() {}),
+                child: SecondaaryHeaderComponentWidget(),
               ),
             ),
           ],

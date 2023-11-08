@@ -6,6 +6,7 @@ import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
 import '/pages/bottomnavigations/bottom_navigation_home_component/bottom_navigation_home_component_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'member_list_page_model.dart';
@@ -40,6 +41,15 @@ class _MemberListPageWidgetState extends State<MemberListPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -65,14 +75,10 @@ class _MemberListPageWidgetState extends State<MemberListPageWidget> {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            10.0, 10.0, 10.0, 10.0),
-                        child: wrapWithModel(
-                          model: _model.headerComponentModel,
-                          updateCallback: () => setState(() {}),
-                          child: HeaderComponentWidget(),
-                        ),
+                      wrapWithModel(
+                        model: _model.headerComponentModel,
+                        updateCallback: () => setState(() {}),
+                        child: HeaderComponentWidget(),
                       ),
                       Row(
                         mainAxisSize: MainAxisSize.max,
@@ -232,6 +238,10 @@ class _MemberListPageWidgetState extends State<MemberListPageWidget> {
                                             image: getJsonField(
                                               subscriptionsItem,
                                               r'''$.image''',
+                                            ),
+                                            idMembership: getJsonField(
+                                              subscriptionsItem,
+                                              r'''$.id''',
                                             ),
                                           );
                                         }),

@@ -2,8 +2,8 @@ import '/ff/ff_theme.dart';
 import '/ff/ff_util.dart';
 import 'product_card_widget_widget.dart' show ProductCardWidgetWidget;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 
 class ProductCardWidgetModel extends FFModel<ProductCardWidgetWidget> {

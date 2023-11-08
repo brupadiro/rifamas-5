@@ -4,6 +4,7 @@ import '/ff/ff_theme.dart';
 import '/ff/ff_util.dart';
 import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'header_component_model.dart';
@@ -93,26 +94,31 @@ class _HeaderComponentWidgetState extends State<HeaderComponentWidget> {
               fit: BoxFit.cover,
             ),
           ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Text(
-                '${FFAppState().currentBalance} ',
-                style: FFTheme.of(context).titleLarge.override(
-                      fontFamily: 'Readex Pro',
-                      color: FFTheme.of(context).primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
-              Text(
-                '€',
-                style: FFTheme.of(context).titleLarge.override(
-                      fontFamily: 'Readex Pro',
-                      color: FFTheme.of(context).primary,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ],
+          Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(
+                  (String balance) {
+                    return balance.replaceAll(".", ",");
+                  }(FFAppState().currentBalance),
+                  style: FFTheme.of(context).titleLarge.override(
+                        fontFamily: 'Readex Pro',
+                        color: FFTheme.of(context).primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                Text(
+                  '€',
+                  style: FFTheme.of(context).titleLarge.override(
+                        fontFamily: 'Readex Pro',
+                        color: FFTheme.of(context).primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ].divide(SizedBox(width: 5.0)),
+            ),
           ),
         ],
       ),

@@ -6,7 +6,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import '/backend/backend.dart';
 
-import '../../auth/base_auth_user_provider.dart';
+import '/auth/base_auth_user_provider.dart';
 
 import '/index.dart';
 import '/main.dart';
@@ -79,14 +79,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? AccountPageWidget() : LoginPageWidget(),
+          appStateNotifier.loggedIn ? AccountPageWidget() : HomePageWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
           builder: (context, _) => appStateNotifier.loggedIn
               ? AccountPageWidget()
-              : LoginPageWidget(),
+              : HomePageWidget(),
         ),
         FFRoute(
           name: 'HomePage',
@@ -111,9 +111,9 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => MemberListPageWidget(),
         ),
         FFRoute(
-          name: 'memberPage',
-          path: '/memberPage',
-          builder: (context, params) => MemberPageWidget(
+          name: 'memberPageDetail',
+          path: '/memberPageDetail',
+          builder: (context, params) => MemberPageDetailWidget(
             idMembresy: params.getParam('idMembresy', ParamType.int),
           ),
         ),
@@ -175,9 +175,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'chatSinglePage',
           path: '/chatSinglePage',
+          asyncParams: {
+            'chat': getDoc(['chats'], ChatsRecord.fromSnapshot),
+          },
           builder: (context, params) => ChatSinglePageWidget(
-            chat: params.getParam(
-                'chat', ParamType.DocumentReference, false, ['chats']),
+            chatReference: params.getParam(
+                'chatReference', ParamType.DocumentReference, false, ['chats']),
+            chat: params.getParam('chat', ParamType.Document),
           ),
         ),
         FFRoute(
@@ -294,6 +298,18 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'withdrawPage',
           path: '/withdrawPage',
           builder: (context, params) => WithdrawPageWidget(),
+        ),
+        FFRoute(
+          name: 'webViewPage',
+          path: '/webViewPage',
+          builder: (context, params) => WebViewPageWidget(
+            route: params.getParam('route', ParamType.String),
+          ),
+        ),
+        FFRoute(
+          name: 'LoteryCreatedPage',
+          path: '/loteryCreatedPage',
+          builder: (context, params) => LoteryCreatedPageWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -460,7 +476,7 @@ class FFRoute {
 
           if (requireAuth && !appStateNotifier.loggedIn) {
             appStateNotifier.setRedirectLocationIfUnset(state.location);
-            return '/loginPage';
+            return '/homePage';
           }
           return null;
         },

@@ -6,7 +6,8 @@ export '/pages/my_product_list_all_page/my_product_list_all_page_widget.dart'
     show MyProductListAllPageWidget;
 export '/pages/member_list_page/member_list_page_widget.dart'
     show MemberListPageWidget;
-export '/pages/member_page/member_page_widget.dart' show MemberPageWidget;
+export '/pages/memeberships/member_page_detail/member_page_detail_widget.dart'
+    show MemberPageDetailWidget;
 export '/pages/users/account_page/account_page_widget.dart'
     show AccountPageWidget;
 export '/pages/monedero_page/monedero_page_widget.dart' show MonederoPageWidget;
@@ -72,3 +73,12 @@ export '/shipments_page/shipments_page_widget.dart' show ShipmentsPageWidget;
 export '/terms_page/terms_page_widget.dart' show TermsPageWidget;
 export '/pages/users/monedero/withdraw_page/withdraw_page_widget.dart'
     show WithdrawPageWidget;
+export '/pages/web_view_page/web_view_page_widget.dart' show WebViewPageWidget;
+export '/pages/loteries/lotery_created_page/lotery_created_page_widget.dart'
+    show LoteryCreatedPageWidget;
+export '/pages/loteries/new_participant_lottery_page/new_participant_lottery_page_widget.dart'
+    show NewParticipantLotteryPageWidget;
+export '/pages/loteries/lotery_subscribed_page/lotery_subscribed_page_widget.dart'
+    show LoterySubscribedPageWidget;
+export '/pages/memeberships/membership_subscribed_page/membership_subscribed_page_widget.dart'
+    show MembershipSubscribedPageWidget;

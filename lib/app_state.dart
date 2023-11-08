@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'ff/request_manager.dart';
 import '/backend/backend.dart';
 import 'backend/api_requests/api_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -120,7 +121,7 @@ class FFAppState extends ChangeNotifier {
     _urlMemebresia = _value;
   }
 
-  String _currentBalance = '0.0';
+  String _currentBalance = '0,0';
   String get currentBalance => _currentBalance;
   set currentBalance(String _value) {
     _currentBalance = _value;
@@ -172,6 +173,65 @@ class FFAppState extends ChangeNotifier {
   set numberOfTickets(String _value) {
     _numberOfTickets = _value;
   }
+
+  List<int> _ticketsSelected = [];
+  List<int> get ticketsSelected => _ticketsSelected;
+  set ticketsSelected(List<int> _value) {
+    _ticketsSelected = _value;
+  }
+
+  void addToTicketsSelected(int _value) {
+    _ticketsSelected.add(_value);
+  }
+
+  void removeFromTicketsSelected(int _value) {
+    _ticketsSelected.remove(_value);
+  }
+
+  void removeAtIndexFromTicketsSelected(int _index) {
+    _ticketsSelected.removeAt(_index);
+  }
+
+  void updateTicketsSelectedAtIndex(
+    int _index,
+    int Function(int) updateFn,
+  ) {
+    _ticketsSelected[_index] = updateFn(_ticketsSelected[_index]);
+  }
+
+  void insertAtIndexInTicketsSelected(int _index, int _value) {
+    _ticketsSelected.insert(_index, _value);
+  }
+
+  final _membershipCacheManager = FutureRequestManager<ApiCallResponse>();
+  Future<ApiCallResponse> membershipCache({
+    String? uniqueQueryKey,
+    bool? overrideCache,
+    required Future<ApiCallResponse> Function() requestFn,
+  }) =>
+      _membershipCacheManager.performRequest(
+        uniqueQueryKey: uniqueQueryKey,
+        overrideCache: overrideCache,
+        requestFn: requestFn,
+      );
+  void clearMembershipCacheCache() => _membershipCacheManager.clear();
+  void clearMembershipCacheCacheKey(String? uniqueKey) =>
+      _membershipCacheManager.clearRequest(uniqueKey);
+
+  final _categoriesCacheManager = FutureRequestManager<ApiCallResponse>();
+  Future<ApiCallResponse> categoriesCache({
+    String? uniqueQueryKey,
+    bool? overrideCache,
+    required Future<ApiCallResponse> Function() requestFn,
+  }) =>
+      _categoriesCacheManager.performRequest(
+        uniqueQueryKey: uniqueQueryKey,
+        overrideCache: overrideCache,
+        requestFn: requestFn,
+      );
+  void clearCategoriesCacheCache() => _categoriesCacheManager.clear();
+  void clearCategoriesCacheCacheKey(String? uniqueKey) =>
+      _categoriesCacheManager.clearRequest(uniqueKey);
 }
 
 LatLng? _latLngFromString(String? val) {

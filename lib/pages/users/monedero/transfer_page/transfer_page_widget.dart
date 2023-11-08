@@ -7,6 +7,7 @@ import '/ff/ff_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'transfer_page_model.dart';
@@ -30,9 +31,12 @@ class _TransferPageWidgetState extends State<TransferPageWidget> {
     _model = createModel(context, () => TransferPageModel());
 
     _model.textController1 ??= TextEditingController(text: _model.receipter);
+    _model.textFieldFocusNode1 ??= FocusNode();
     _model.textController2 ??=
         TextEditingController(text: _model.amount?.toString());
+    _model.textFieldFocusNode2 ??= FocusNode();
     _model.textController3 ??= TextEditingController();
+    _model.textFieldFocusNode3 ??= FocusNode();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -45,6 +49,15 @@ class _TransferPageWidgetState extends State<TransferPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -82,6 +95,7 @@ class _TransferPageWidgetState extends State<TransferPageWidget> {
                         width: MediaQuery.sizeOf(context).width * 1.0,
                         child: TextFormField(
                           controller: _model.textController1,
+                          focusNode: _model.textFieldFocusNode1,
                           onChanged: (_) => EasyDebounce.debounce(
                             '_model.textController1',
                             Duration(milliseconds: 2000),
@@ -145,6 +159,7 @@ class _TransferPageWidgetState extends State<TransferPageWidget> {
                         width: MediaQuery.sizeOf(context).width * 1.0,
                         child: TextFormField(
                           controller: _model.textController2,
+                          focusNode: _model.textFieldFocusNode2,
                           onChanged: (_) => EasyDebounce.debounce(
                             '_model.textController2',
                             Duration(milliseconds: 2000),
@@ -209,6 +224,7 @@ class _TransferPageWidgetState extends State<TransferPageWidget> {
                         width: MediaQuery.sizeOf(context).width * 1.0,
                         child: TextFormField(
                           controller: _model.textController3,
+                          focusNode: _model.textFieldFocusNode3,
                           autofocus: true,
                           obscureText: false,
                           decoration: InputDecoration(

@@ -8,6 +8,7 @@ import '/ff/upload_data.dart';
 import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'first_create_gitf_page_model.dart';
@@ -32,7 +33,9 @@ class _FirstCreateGitfPageWidgetState extends State<FirstCreateGitfPageWidget> {
     _model = createModel(context, () => FirstCreateGitfPageModel());
 
     _model.textController1 ??= TextEditingController();
+    _model.textFieldFocusNode1 ??= FocusNode();
     _model.textController2 ??= TextEditingController();
+    _model.textFieldFocusNode2 ??= FocusNode();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -45,6 +48,15 @@ class _FirstCreateGitfPageWidgetState extends State<FirstCreateGitfPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -58,7 +70,7 @@ class _FirstCreateGitfPageWidgetState extends State<FirstCreateGitfPageWidget> {
           alignment: AlignmentDirectional(0.0, 1.0),
           children: [
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
+              padding: EdgeInsetsDirectional.fromSTEB(10.0, 80.0, 10.0, 10.0),
               child: Container(
                 width: MediaQuery.sizeOf(context).width * 1.0,
                 height: MediaQuery.sizeOf(context).height * 1.0,
@@ -68,11 +80,6 @@ class _FirstCreateGitfPageWidgetState extends State<FirstCreateGitfPageWidget> {
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      wrapWithModel(
-                        model: _model.secondaaryHeaderComponentModel,
-                        updateCallback: () => setState(() {}),
-                        child: SecondaaryHeaderComponentWidget(),
-                      ),
                       Form(
                         key: _model.formKey,
                         autovalidateMode: AutovalidateMode.always,
@@ -155,6 +162,7 @@ class _FirstCreateGitfPageWidgetState extends State<FirstCreateGitfPageWidget> {
                                   ),
                                   TextFormField(
                                     controller: _model.textController1,
+                                    focusNode: _model.textFieldFocusNode1,
                                     onChanged: (_) => EasyDebounce.debounce(
                                       '_model.textController1',
                                       Duration(milliseconds: 2000),
@@ -230,6 +238,7 @@ class _FirstCreateGitfPageWidgetState extends State<FirstCreateGitfPageWidget> {
                                   ),
                                   TextFormField(
                                     controller: _model.textController2,
+                                    focusNode: _model.textFieldFocusNode2,
                                     onChanged: (_) => EasyDebounce.debounce(
                                       '_model.textController2',
                                       Duration(milliseconds: 2000),
@@ -730,6 +739,14 @@ class _FirstCreateGitfPageWidgetState extends State<FirstCreateGitfPageWidget> {
                     ],
                   ),
                 ),
+              ),
+            ),
+            Align(
+              alignment: AlignmentDirectional(0.00, -1.00),
+              child: wrapWithModel(
+                model: _model.secondaaryHeaderComponentModel,
+                updateCallback: () => setState(() {}),
+                child: SecondaaryHeaderComponentWidget(),
               ),
             ),
           ],

@@ -5,7 +5,9 @@ import '/ff/ff_theme.dart';
 import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
 import '/pages/bottomnavigations/bottom_navigation_home_component/bottom_navigation_home_component_widget.dart';
+import '/ff/random_data_util.dart' as random_data;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'my_product_list_all_page_model.dart';
@@ -42,6 +44,15 @@ class _MyProductListAllPageWidgetState
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -56,7 +67,7 @@ class _MyProductListAllPageWidgetState
           child: Stack(
             children: [
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 120.0, 0.0, 0.0),
+                padding: EdgeInsetsDirectional.fromSTEB(0.0, 80.0, 0.0, 0.0),
                 child: Container(
                   width: MediaQuery.sizeOf(context).width * 1.0,
                   height: MediaQuery.sizeOf(context).height * 1.0,
@@ -133,7 +144,7 @@ class _MyProductListAllPageWidgetState
                         ),
                         Container(
                           width: MediaQuery.sizeOf(context).width * 1.0,
-                          height: 280.0,
+                          height: 450.0,
                           decoration: BoxDecoration(
                             color: FFTheme.of(context).accent4,
                           ),
@@ -175,6 +186,7 @@ class _MyProductListAllPageWidgetState
                                       FFAppState().jwtuser,
                                       r'''$.ID''',
                                     ),
+                                    type: 'lottery',
                                   ),
                                   builder: (context, snapshot) {
                                     // Customize what your widget looks like when it's loading.
@@ -204,7 +216,7 @@ class _MyProductListAllPageWidgetState
                                         return Row(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment.spaceBetween,
                                           children: List.generate(
                                               productx.length, (productxIndex) {
                                             final productxItem =
@@ -218,7 +230,7 @@ class _MyProductListAllPageWidgetState
                                                     MediaQuery.sizeOf(context)
                                                             .width *
                                                         0.45,
-                                                height: 200.0,
+                                                height: 350.0,
                                                 decoration: BoxDecoration(
                                                   color: FFTheme.of(
                                                           context)
@@ -227,6 +239,9 @@ class _MyProductListAllPageWidgetState
                                                 child: ProductCardWidgetWidget(
                                                   key: Key(
                                                       'Keyohj_${productxIndex}_of_${productx.length}'),
+                                                  color: FFTheme.of(
+                                                          context)
+                                                      .secondaryBackground,
                                                   title: getJsonField(
                                                     productxItem,
                                                     r'''$.name''',
@@ -247,6 +262,12 @@ class _MyProductListAllPageWidgetState
                                                     productxItem,
                                                     r'''$.meta_data''',
                                                   ),
+                                                  percentbar: random_data
+                                                      .randomDouble(0.0, 0.7),
+                                                  type: getJsonField(
+                                                    productxItem,
+                                                    r'''$.type''',
+                                                  ).toString(),
                                                 ),
                                               ),
                                             );
@@ -262,7 +283,7 @@ class _MyProductListAllPageWidgetState
                         ),
                         Container(
                           width: MediaQuery.sizeOf(context).width * 1.0,
-                          height: 400.0,
+                          height: 450.0,
                           decoration: BoxDecoration(
                             color: Color(0xFFEDEDED),
                           ),
@@ -323,13 +344,10 @@ class _MyProductListAllPageWidgetState
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
-                child: wrapWithModel(
-                  model: _model.headerComponentModel,
-                  updateCallback: () => setState(() {}),
-                  child: HeaderComponentWidget(),
-                ),
+              wrapWithModel(
+                model: _model.headerComponentModel,
+                updateCallback: () => setState(() {}),
+                child: HeaderComponentWidget(),
               ),
             ],
           ),

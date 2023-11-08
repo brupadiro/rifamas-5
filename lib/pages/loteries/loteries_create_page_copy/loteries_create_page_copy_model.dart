@@ -7,6 +7,7 @@ import 'loteries_create_page_copy_widget.dart'
     show LoteriesCreatePageCopyWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -58,15 +59,19 @@ class LoteriesCreatePageCopyModel
   // Model for secondaaryHeaderComponent component.
   late SecondaaryHeaderComponentModel secondaaryHeaderComponentModel;
   // State field(s) for title widget.
+  FocusNode? titleFocusNode;
   TextEditingController? titleController;
   String? Function(BuildContext, String?)? titleControllerValidator;
   // State field(s) for description widget.
+  FocusNode? descriptionFocusNode;
   TextEditingController? descriptionController;
   String? Function(BuildContext, String?)? descriptionControllerValidator;
   // State field(s) for max_tickets widget.
+  FocusNode? maxTicketsFocusNode;
   TextEditingController? maxTicketsController;
   String? Function(BuildContext, String?)? maxTicketsControllerValidator;
   // State field(s) for lottery_price widget.
+  FocusNode? lotteryPriceFocusNode;
   TextEditingController? lotteryPriceController;
   String? Function(BuildContext, String?)? lotteryPriceControllerValidator;
 
@@ -80,9 +85,16 @@ class LoteriesCreatePageCopyModel
   void dispose() {
     unfocusNode.dispose();
     secondaaryHeaderComponentModel.dispose();
+    titleFocusNode?.dispose();
     titleController?.dispose();
+
+    descriptionFocusNode?.dispose();
     descriptionController?.dispose();
+
+    maxTicketsFocusNode?.dispose();
     maxTicketsController?.dispose();
+
+    lotteryPriceFocusNode?.dispose();
     lotteryPriceController?.dispose();
   }
 

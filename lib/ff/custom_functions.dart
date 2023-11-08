@@ -17,13 +17,13 @@ String countParticipants(List<dynamic> metadata) {
   return count.toString();
 }
 
-String maxParticipants(List<dynamic> metadata) {
+List<int> adentroInfo(List<dynamic> metadata) {
   try {
-    var object = metadata.firstWhere((item) => item['key'] == '_max_tickets');
-    return object["value"].toString();
+    var object = metadata.firstWhere((item) => item['key'] == 'adentro_info');
+    return object["value"];
   } catch (e) {
     print('Ocurrió un error: $e');
-    return "0";
+    return [];
   }
 }
 
@@ -50,6 +50,37 @@ String? filterPapeletas(
   }
 
   return 'N/A';
+}
+
+String maxParticipants(List<dynamic> metadata) {
+  try {
+    var object = metadata.firstWhere((item) => item['key'] == '_max_tickets');
+    return object["value"].toString();
+  } catch (e) {
+    print('Ocurrió un error: $e');
+    return "0";
+  }
+}
+
+String productType(List<dynamic> metadata) {
+  try {
+    var object = metadata.firstWhere((item) => item['key'] == 'product_type');
+    return object["value"].toString();
+  } catch (e) {
+    print('Ocurrió un error: $e');
+    return "0";
+  }
+}
+
+String totalViews(List<dynamic> metadata) {
+  try {
+    var object =
+        metadata.firstWhere((item) => item['key'] == '_total_views_count');
+    return object["value"].toString();
+  } catch (e) {
+    print('Ocurrió un error: $e');
+    return "0";
+  }
 }
 
 double? pocentParticipants(
@@ -87,4 +118,19 @@ List<int> numberOfPapeletas(String length) {
   }
 
   return myList;
+}
+
+double pricePerTicket(
+  int price,
+  String cant,
+) {
+  try {
+    if (price != null) {
+      return price / int.parse(cant);
+    } else {
+      return 0;
+    }
+  } catch (e) {
+    return 0;
+  }
 }

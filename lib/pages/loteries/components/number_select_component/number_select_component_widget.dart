@@ -4,6 +4,7 @@ import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
 import '/ff/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'number_select_component_model.dart';
@@ -160,6 +161,10 @@ class _NumberSelectComponentWidgetState
                                           highlightColor: Colors.transparent,
                                           onTap: () async {
                                             setState(() {
+                                              FFAppState().addToTicketsSelected(
+                                                  papeletasIndex + 1);
+                                            });
+                                            setState(() {
                                               _model.addToLotteryNumbers(
                                                   papeletasIndex);
                                             });
@@ -207,6 +212,10 @@ class _NumberSelectComponentWidgetState
                                           hoverColor: Colors.transparent,
                                           highlightColor: Colors.transparent,
                                           onTap: () async {
+                                            setState(() {
+                                              FFAppState().addToTicketsSelected(
+                                                  papeletasIndex + 1);
+                                            });
                                             setState(() {
                                               _model.addToLotteryNumbers(
                                                   papeletasIndex);
@@ -267,19 +276,7 @@ class _NumberSelectComponentWidgetState
                       FFAppState().jwtuser,
                       r'''$.ID''',
                     ),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Redirigiendo a la pasarela...',
-                        style: TextStyle(
-                          color:
-                              FFTheme.of(context).secondaryBackground,
-                        ),
-                      ),
-                      duration: Duration(milliseconds: 4000),
-                      backgroundColor: FFTheme.of(context).primary,
-                    ),
+                    ticketsList: FFAppState().ticketsSelected,
                   );
                   if ((_model.apiResultywtCopy?.succeeded ?? true)) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -295,11 +292,16 @@ class _NumberSelectComponentWidgetState
                       ),
                     );
                     Navigator.pop(context);
-                    await launchURL(
-                        'https://staging.rifamas.es/?user_id=${getJsonField(
-                      FFAppState().jwtuser,
-                      r'''$.ID''',
-                    ).toString()}');
+
+                    context.pushNamed(
+                      'webViewPage',
+                      queryParameters: {
+                        'route': serializeParam(
+                          'product',
+                          ParamType.String,
+                        ),
+                      }.withoutNulls,
+                    );
                   }
 
                   setState(() {});

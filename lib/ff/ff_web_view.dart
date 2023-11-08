@@ -15,12 +15,15 @@ class FFWebView extends StatefulWidget {
     this.bypass = false,
     this.horizontalScroll = false,
     this.verticalScroll = false,
+    this.redirectUrl = "",
     this.html = false,
+
   }) : super(key: key);
 
   final String content;
   final double? height;
   final double? width;
+  final String redirectUrl;
   final bool bypass;
   final bool horizontalScroll;
   final bool verticalScroll;
@@ -48,16 +51,19 @@ class _FFWebViewState extends State<FFWebView> {
         javascriptMode: JavascriptMode.unrestricted,
         navigationDelegate: (request) async {
           if (isAndroid) {
-            if (request.content.source
-                .startsWith('https://api.whatsapp.com/send?phone')) {
-              String url = request.content.source;
+          String url = request.content.source;
+          if (url.contains('order-received')) {
+          //context.pushNamed('loteryCreatedPage');
+            if(widget.redirectUrl == 'membership'){
+             context.pushNamed('firstCreatePage');
+            }else if(widget.redirectUrl =='product') {
+            context.pushNamed('loteryCreatedPage');
+          } else {
+            context.pushNamed('firstCreatePage');
+          }
+           // Aquí puedes poner el código que quieras ejecutar si la URL contiene 'order-received'
+          }
 
-              await launchUrl(
-                Uri.parse(url),
-                mode: LaunchMode.externalApplication,
-              );
-              return NavigationDecision.prevent;
-            }
           }
           return NavigationDecision.navigate;
         },

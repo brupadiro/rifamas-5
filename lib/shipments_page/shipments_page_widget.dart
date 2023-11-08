@@ -3,6 +3,7 @@ import '/ff/ff_theme.dart';
 import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'shipments_page_model.dart';
@@ -26,7 +27,9 @@ class _ShipmentsPageWidgetState extends State<ShipmentsPageWidget> {
     _model = createModel(context, () => ShipmentsPageModel());
 
     _model.textController1 ??= TextEditingController();
+    _model.textFieldFocusNode1 ??= FocusNode();
     _model.textController2 ??= TextEditingController();
+    _model.textFieldFocusNode2 ??= FocusNode();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -39,6 +42,15 @@ class _ShipmentsPageWidgetState extends State<ShipmentsPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
@@ -80,6 +92,7 @@ class _ShipmentsPageWidgetState extends State<ShipmentsPageWidget> {
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
                       child: TextFormField(
                         controller: _model.textController1,
+                        focusNode: _model.textFieldFocusNode1,
                         obscureText: false,
                         decoration: InputDecoration(
                           labelText: 'ID de Seguimiento',
@@ -124,6 +137,7 @@ class _ShipmentsPageWidgetState extends State<ShipmentsPageWidget> {
                           EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
                       child: TextFormField(
                         controller: _model.textController2,
+                        focusNode: _model.textFieldFocusNode2,
                         obscureText: false,
                         decoration: InputDecoration(
                           labelText: 'Correo Electrónico',

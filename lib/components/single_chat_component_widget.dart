@@ -2,6 +2,7 @@ import '/backend/backend.dart';
 import '/ff/ff_theme.dart';
 import '/ff/ff_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'single_chat_component_model.dart';
@@ -68,7 +69,7 @@ class _SingleChatComponentWidgetState extends State<SingleChatComponentWidget> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: Image.network(
-                  'https://contents.mediadecathlon.com/p2288177/k\$116cfdd2a0758ce06d2ff535b24282cf/bicicleta-urbana-clasica-elops-520-cuadro-bajo-28-pulgadas-6-v-azul.jpg?format=auto&quality=40&f=800x800',
+                  widget.chat!.image,
                   width: 120.0,
                   height: 120.0,
                   fit: BoxFit.cover,
@@ -84,7 +85,10 @@ class _SingleChatComponentWidgetState extends State<SingleChatComponentWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Pedro Perez',
+                      valueOrDefault<String>(
+                        widget.chat?.seller,
+                        'N/A',
+                      ),
                       style: FFTheme.of(context).titleMedium.override(
                             fontFamily: 'Montserrat',
                             color: FFTheme.of(context).primary,
@@ -92,7 +96,10 @@ class _SingleChatComponentWidgetState extends State<SingleChatComponentWidget> {
                           ),
                     ),
                     Text(
-                      'Rifa Bicicleta',
+                      valueOrDefault<String>(
+                        widget.chat?.product,
+                        'N/A',
+                      ),
                       style:
                           FFTheme.of(context).headlineMedium.override(
                                 fontFamily: 'Montserrat',
@@ -120,7 +127,7 @@ class _SingleChatComponentWidgetState extends State<SingleChatComponentWidget> {
               padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 8.0),
               child: Text(
                 valueOrDefault<String>(
-                  widget.chat?.lastMessageTime?.toString(),
+                  dateTimeFormat('d/M/y', widget.chat?.lastMessageTime),
                   'HH:mm',
                 ),
                 style: FFTheme.of(context).bodySmall.override(

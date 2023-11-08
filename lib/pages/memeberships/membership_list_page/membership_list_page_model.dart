@@ -6,6 +6,7 @@ import '/ff/ff_util.dart';
 import '/ff/ff_widgets.dart';
 import 'membership_list_page_widget.dart' show MembershipListPageWidget;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
@@ -15,12 +16,13 @@ class MembershipListPageModel
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
-  // Model for secondaaryHeaderComponent component.
-  late SecondaaryHeaderComponentModel secondaaryHeaderComponentModel;
   // State field(s) for ListView widget.
 
   PagingController<ApiPagingParams, dynamic>? listViewPagingController;
   Function(ApiPagingParams nextPageMarker)? listViewApiCall;
+
+  // Model for secondaaryHeaderComponent component.
+  late SecondaaryHeaderComponentModel secondaaryHeaderComponentModel;
 
   /// Initialization and disposal methods.
 
@@ -31,8 +33,8 @@ class MembershipListPageModel
 
   void dispose() {
     unfocusNode.dispose();
-    secondaaryHeaderComponentModel.dispose();
     listViewPagingController?.dispose();
+    secondaaryHeaderComponentModel.dispose();
   }
 
   /// Action blocks are added here.
